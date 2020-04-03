@@ -35,7 +35,7 @@ class CryptoAuthLib(ConanFile):
         'debugOutput': False,
         'debugOutputPkcs11': False
     }
-    exports_sources = ["01-support-osx.diff", "02-fix-install-location.diff"]
+    exports_sources = ["lib/*", "01-support-osx.diff", "02-fix-install-location.diff"]
     generators = "cmake"
 
     scm = {
@@ -46,10 +46,15 @@ class CryptoAuthLib(ConanFile):
         #'revision': version
     }
 
-    def configure(self):
-        if self.settings.os == 'Linux' and self.options['hal_kit_id']:
-            raise Exception("Sorry - libudev isn't generally available in Conan yet so I can't build the library "
-                            "with this configuration.")
+    def requirements(self):
+        if self.settings.os == "Linux" and self.options['halHID']:
+#             self.requires("libusb/1.0.22@totemic/stable")
+            self.requires("libudev1/237@totemic/stable")
+
+#     def configure(self):
+#         if self.settings.os == 'Linux' and self.options['halHID']:
+#             raise Exception("Sorry - libudev isn't generally available in Conan yet so I can't build the library "
+#                             "with this configuration.")
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -83,6 +88,7 @@ class CryptoAuthLib(ConanFile):
     def package(self):
         # self.copy('*.so' if self.options.shared else '*.a', src=os.path.join(self.bin_dir), dst='lib')
         # self.copy('*.h', src=os.path.join(self.build_folder, 'lib'), dst='include')
+        self.copy('*.h', src='lib', dst='include/cryptoauthlib')
         cmake = self._configure_cmake()
         cmake.install()
 
@@ -90,27 +96,9 @@ class CryptoAuthLib(ConanFile):
         self.cpp_info.libs = ['cryptoauth']
         self.cpp_info.includedirs = [
             'include',
-            os.path.join('include', 'hal'),
-            os.path.join('include', 'basic'),
-            os.path.join('include', 'crypto'),
-            os.path.join('include', 'atcacert')
+            os.path.join('include', 'cryptoauthlib'),
+            os.path.join('include', 'cryptoauthlib', 'hal'),
+            os.path.join('include', 'cryptoauthlib', 'basic'),
+            os.path.join('include', 'cryptoauthlib', 'crypto'),
+            os.path.join('include', 'cryptoauthlib', 'atcacert')
         ]
-
-#################
-    # @property
-    # def cmake(self):
-    #     cmake = CMake(self)
-    #     cmake.definitions.update({
-    #         'ATCA_HAL_KIT_HID': 'ON' if self.options.hal_kit_hid else 'OFF',
-    #         'ATCA_HAL_I2C': 'ON' if self.options.hal_i2c else 'OFF',
-    #         'ATCA_HAL_CUSTOM': 'ON' if self.options.hal_custom else 'OFF',
-    #         'ATCA_PRINTF': 'ON' if self.options.printf else 'OFF',
-    #         'ATCA_PKCS11': 'ON' if self.options.pkcs11 else 'OFF',
-    #         'ATCA_MBEDTLS': 'ON' if self.options.mbedtls else 'OFF',
-    #         'ATCA_BUILD_SHARED_LIBS': 'ON' if self.options.shared else 'OFF'
-    #     })
-    #     return cmake
-
-    @property
-    def bin_dir(self):
-        return os.path.join(self.build_folder, 'build')
