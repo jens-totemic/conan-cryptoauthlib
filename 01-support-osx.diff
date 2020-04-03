@@ -1,0 +1,13 @@
+diff --git a/lib/hal/atca_hal.h b/lib/hal/atca_hal.h
+index f5e0b31a..0cb846b0 100644
+--- a/lib/hal/atca_hal.h
++++ b/lib/hal/atca_hal.h
+@@ -164,7 +164,7 @@ ATCA_STATUS hal_destroy_mutex(void * pMutex);
+ ATCA_STATUS hal_lock_mutex(void * pMutex);
+ ATCA_STATUS hal_unlock_mutex(void * pMutex);
+ 
+-#if defined(_WIN32) || defined(__linux__)
++#if defined(_WIN32) || defined(__linux__) || defined(__APPLE__)
+ #include <stdlib.h>
+ #define hal_malloc      malloc
+ #define hal_free        free
