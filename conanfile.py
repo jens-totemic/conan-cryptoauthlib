@@ -93,7 +93,6 @@ class CryptoAuthLib(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ['cryptoauth']
         self.cpp_info.includedirs = [
             'include',
             os.path.join('include', 'cryptoauthlib'),
@@ -102,3 +101,6 @@ class CryptoAuthLib(ConanFile):
             os.path.join('include', 'cryptoauthlib', 'crypto'),
             os.path.join('include', 'cryptoauthlib', 'atcacert')
         ]
+        self.cpp_info.libs = ["cryptoauth"]
+        if self.settings.os == "Linux":
+            self.cpp_info.libs.extend(["rt"])
