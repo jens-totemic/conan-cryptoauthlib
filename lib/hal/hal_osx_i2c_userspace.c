@@ -100,6 +100,7 @@ ATCA_STATUS hal_i2c_init(void* hal, ATCAIfaceCfg* cfg)
     }
 
     return ret;
+
 }
 
 /** \brief HAL implementation of I2C post init
@@ -112,112 +113,28 @@ ATCA_STATUS hal_i2c_post_init(ATCAIface iface)
 }
 
 /** \brief HAL implementation of I2C send
- * \param[in] iface     instance
- * \param[in] txdata    pointer to space to bytes to send
- * \param[in] txlength  number of bytes to send
+ * \param[in] iface         instance
+ * \param[in] word_address  device transaction type
+ * \param[in] txdata        pointer to space to bytes to send
+ * \param[in] txlength      number of bytes to send
  * \return ATCA_SUCCESS on success, otherwise an error code.
  */
 
-ATCA_STATUS hal_i2c_send(ATCAIface iface, uint8_t *txdata, int txlength)
+ATCA_STATUS hal_i2c_send(ATCAIface iface, uint8_t word_address, uint8_t *txdata, int txlength)
 {
-//     ATCAIfaceCfg *cfg = atgetifacecfg(iface);
-//     ATCAI2CMaster_t * hal_data = (ATCAI2CMaster_t*)atgetifacehaldat(iface);
-//     int f_i2c;  // I2C file descriptor
-// 
-//     // for this implementation of I2C with CryptoAuth chips, txdata is assumed to have ATCAPacket format
-// 
-//     // other device types that don't require i/o tokens on the front end of a command need a different hal_i2c_send and wire it up instead of this one
-//     // this covers devices such as ATSHA204A and ATECCx08A that require a word address value pre-pended to the packet
-//     // txdata[0] is using _reserved byte of the ATCAPacket
-//     txdata[0] = 0x03; // insert the Word Address Value, Command token
-//     txlength++;       // account for word address value byte.
-// 
-//     // Initiate I2C communication
-//     if ( (f_i2c = open(hal_data->i2c_file, O_RDWR)) < 0)
-//     {
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Set Slave Address
-//     if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Send data
-//     if (write(f_i2c, txdata, txlength) != txlength)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     close(f_i2c);
     return ATCA_SUCCESS;
 }
 
 /** \brief HAL implementation of I2C receive function
- * \param[in]    iface     Device to interact with.
- * \param[out]   rxdata    Data received will be returned here.
- * \param[inout] rxlength  As input, the size of the rxdata buffer.
- *                         As output, the number of bytes received.
+ * \param[in]    iface          Device to interact with.
+ * \param[in]    word_address   device transaction type
+ * \param[out]   rxdata         Data received will be returned here.
+ * \param[in,out] rxlength      As input, the size of the rxdata buffer.
+ *                              As output, the number of bytes received.
  * \return ATCA_SUCCESS on success, otherwise an error code.
  */
-ATCA_STATUS hal_i2c_receive(ATCAIface iface, uint8_t *rxdata, uint16_t *rxlength)
+ATCA_STATUS hal_i2c_receive(ATCAIface iface, uint8_t word_address, uint8_t *rxdata, uint16_t *rxlength)
 {
-//     ATCAIfaceCfg *cfg = atgetifacecfg(iface);
-//     ATCAI2CMaster_t * hal_data = (ATCAI2CMaster_t*)atgetifacehaldat(iface);
-//     int f_i2c;  // I2C file descriptor
-//     uint16_t count;
-//     uint16_t rxdata_max_size = *rxlength;
-// 
-//     *rxlength = 0;
-//     if (rxdata_max_size < 1)
-//     {
-//         return ATCA_SMALL_BUFFER;
-//     }
-// 
-//     // Initiate I2C communication
-//     if ( (f_i2c = open(hal_data->i2c_file, O_RDWR)) < 0)
-//     {
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Set Slave Address
-//     if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Receive count
-//     count = 1;
-//     if (read(f_i2c, rxdata, count) != count)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     if (rxdata[0] < ATCA_RSP_SIZE_MIN)
-//     {
-//         return ATCA_INVALID_SIZE;
-//     }
-//     if (rxdata[0] > rxdata_max_size)
-//     {
-//         return ATCA_SMALL_BUFFER;
-//     }
-// 
-//     count = rxdata[0] - 1;
-//     // Receive data
-//     if (read(f_i2c, &rxdata[1], count) != count)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     *rxlength = rxdata[0];
-// 
-//     close(f_i2c);
     return ATCA_SUCCESS;
 }
 
@@ -238,55 +155,6 @@ void change_i2c_speed(ATCAIface iface, uint32_t speed)
 
 ATCA_STATUS hal_i2c_wake(ATCAIface iface)
 {
-//     ATCAIfaceCfg *cfg = atgetifacecfg(iface);
-//     ATCAI2CMaster_t * hal_data = (ATCAI2CMaster_t*)atgetifacehaldat(iface);
-//     int f_i2c;  // I2C file descriptor
-//     uint8_t data[4];
-//     uint8_t dummy_byte = 0x00;
-// 
-//     // Initiate I2C communication
-//     if ( (f_i2c = open(hal_data->i2c_file, O_RDWR)) < 0)
-//     {
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Send the wake by writing to an address of 0x00
-//     // Create wake up pulse by sending a slave address 0f 0x00.
-//     // This slave address is sent to device by using a dummy write command.
-//     if (ioctl(f_i2c, I2C_SLAVE, 0x00) < 0)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Dummy Write
-//     if (write(f_i2c, &dummy_byte, 1) < 0)
-//     {
-//         // This command will always return NACK.
-//         // So, the return code is being ignored.
-//     }
-// 
-//     atca_delay_us(cfg->wake_delay); // wait tWHI + tWLO which is configured based on device type and configuration structure
-// 
-//     // Set Slave Address
-//     if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Receive data
-//     if (read(f_i2c, data, 4) != 4)
-//     {
-//         close(f_i2c);
-//         return ATCA_RX_NO_RESPONSE;
-//     }
-// 
-//     close(f_i2c);
-//     // if necessary, revert baud rate to what came in.
-// 
-//     return hal_check_wake(data, 4);
-
 	return ATCA_SUCCESS;
 }
 
@@ -297,32 +165,6 @@ ATCA_STATUS hal_i2c_wake(ATCAIface iface)
 
 ATCA_STATUS hal_i2c_idle(ATCAIface iface)
 {
-//     ATCAIfaceCfg *cfg = atgetifacecfg(iface);
-//     ATCAI2CMaster_t * hal_data = (ATCAI2CMaster_t*)atgetifacehaldat(iface);
-//     uint8_t data = 0x02; // idle word address value
-//     int f_i2c;           // I2C file descriptor
-// 
-//     // Initiate I2C communication
-//     if ( (f_i2c = open(hal_data->i2c_file, O_RDWR) ) < 0)
-//     {
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Set Slave Address
-//     if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Send data
-//     if (write(f_i2c, &data, 1) != 1)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     close(f_i2c);
     return ATCA_SUCCESS;
 }
 
@@ -333,32 +175,6 @@ ATCA_STATUS hal_i2c_idle(ATCAIface iface)
 
 ATCA_STATUS hal_i2c_sleep(ATCAIface iface)
 {
-//     ATCAIfaceCfg *cfg = atgetifacecfg(iface);
-//     ATCAI2CMaster_t * hal_data = (ATCAI2CMaster_t*)atgetifacehaldat(iface);
-//     uint8_t data = 0x01; // sleep word address value
-//     int f_i2c;           // I2C file descriptor
-// 
-//     // Initiate I2C communication
-//     if ( (f_i2c = open(hal_data->i2c_file, O_RDWR)) < 0)
-//     {
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Set Slave Address
-//     if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     // Send data
-//     if (write(f_i2c, &data, 1) != 1)
-//     {
-//         close(f_i2c);
-//         return ATCA_COMM_FAIL;
-//     }
-// 
-//     close(f_i2c);
     return ATCA_SUCCESS;
 }
 

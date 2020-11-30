@@ -7,7 +7,7 @@ from conans import ConanFile, CMake, tools
 
 class CryptoAuthLib(ConanFile):
     name = 'cryptoauthlib'
-    version = '2019.09.03'
+    version = '3.2.4'
     license = 'MIT'
     url = 'https://github.com/jens-totemic/conan-cryptoauthlib'
     homepage = 'https://github.com/MicrochipTech/cryptoauthlib'
@@ -41,9 +41,7 @@ class CryptoAuthLib(ConanFile):
     scm = {
         'type': 'git',
         'url': 'https://github.com/MicrochipTech/cryptoauthlib.git',
-        # January 15, 2020 in branch pkcs11
-        'revision': "2df0eb145c7241263d07577394dd12f8b1e783f0"
-        #'revision': version
+        'revision': 'v'+version
     }
 
     def requirements(self):
