@@ -1,2 +1,1 @@
-# conan-cryptoauthlib
-Conan build files for https://github.com/MicrochipTech/cryptoauthlib
+Moved to https://github.com/totemic/conan-package-recipes/tree/main/cryptoauthlib
